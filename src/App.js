@@ -1,8 +1,8 @@
-import Counter from './components/Counter';
+import Chatroom from './components/Chatroom';
 
 function App() {
   return (
-    <Counter />
+    <Chatroom room="aba4647" oauth={process.env.REACT_APP_OAUTH_KEY || ""}/>
   );
 }
 
