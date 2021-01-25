@@ -1,5 +1,5 @@
-import TestStore from './TestStore';
+import ChannelStore from 'stores/ChannelStore';
 
 export default {
-    TestStore,
+    ChannelStore,
 }
