@@ -4,7 +4,7 @@ export default class ChatSocket {
     room;
     onChat;
     constructor(oauth) {
-        this.oauth = oauth;
+        this.oauth = 'oauth:'+oauth;
     }
 
     connect = (room) => {
@@ -58,8 +58,28 @@ export default class ChatSocket {
     }
 }
 
+/*
+@badge-info=subscriber/17;
+badges=subscriber/12,bits/1;
+client-nonce=6100b52dbe0a3b207627fd47e50d0ab9;
+color=#8A2BE2;
+display-name=랄_로;
+emote-only=1;
+emotes=472958:0-12,14-26,28-40;
+flags=;
+id=5e181f7a-e3f0-4912-a170-203deb889dba;
+mod=0;
+room-id=62356185;
+subscriber=1;
+tmi-sent-ts=1611765637022;
+turbo=0;
+user-id=217698329;
+user-type= :ra_lo!ra_lo@ra_lo.tmi.twitch.tv PRIVMSG #looksam :looksamPotter looksamPotter looksamPotter
+*/
+
 function chatParser(msg, room) {
     const data = {};
+    console.log(msg);
     if (msg.startsWith('@')) {
         msg = msg.substring(1);
     }

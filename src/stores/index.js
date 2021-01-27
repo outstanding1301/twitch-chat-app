@@ -1,5 +1,6 @@
-import ChannelStore from 'stores/ChannelStore';
+import channelStore from 'stores/ChannelStore';
+import authStore from 'stores/AuthStore';
 
 export default {
-    ChannelStore,
+    channelStore, authStore
 }
