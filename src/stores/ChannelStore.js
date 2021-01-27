@@ -2,8 +2,6 @@ import { autorun, makeAutoObservable } from 'mobx'
 
 class ChannelStore {
     channels = [
-        {username: 'aba4647', nickname: '랄로'},
-        {username: 'paka9999', nickname: '파카'},
     ];
     
     constructor() {
@@ -21,8 +19,8 @@ class ChannelStore {
 
 const channelStore = new ChannelStore();
 
-autorun(() => {
-    console.log(channelStore.channels);
-})
+// autorun(() => {
+//     console.log(channelStore.channels);
+// })
 
 export default channelStore;
