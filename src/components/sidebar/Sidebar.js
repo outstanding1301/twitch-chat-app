@@ -5,12 +5,9 @@ import { observer, inject } from "mobx-react";
 import { Link, withRouter } from 'react-router-dom';
 
 const useStyles = {
-    root: {
-        height: '100vh'
-    },
-    drawer: {
-        backgroundColor: '#350C35',
-        height: '100%'
+    channels: {
+        height: `calc(100vh - ${(window.clientInformation.platform === 'Win32' ? 28 : 24) + 50}px)`,
+        overflowY: 'scroll',
     },
     whiteText: {
         color: '#FFFFFF'
@@ -35,25 +32,30 @@ const useStyles = {
     }
 };
 
-@inject("ChannelStore")
+@inject("channelStore")
+@inject("authStore")
 @observer
 class Sidebar extends React.Component {
+    constructor(props) {
+        super(props);
+        this.channelStore = this.props.channelStore;
+        this.authStore = this.props.authStore;
+    }
     render() {
         const {history, classes} = this.props;
-
         return (
+            <Grid container className={classes.channels}>
             <List component="a" aria-label="nav-header">
                 <ListItem button onClick={()=>{history.push('/')}}>
                     <ListItemText primary={
                         <React.Fragment>
                             <Grid container alignItems="center">
                                 <Typography variant="h6" className={classes.whiteText}>
-                                    Title
+                                    {this.authStore.user ? this.authStore.user['display_name'] : '🤔'}
                                 </Typography>
-                                <ExpandMore className={classes.whiteIcon} />
                             </Grid>
                             <Typography variant="body2" className={classes.whiteText}>
-                                @nickname
+                                    {this.authStore.user ? '@'+this.authStore.user['login'] : '로그인을 해주세요'}
                             </Typography>
                         </React.Fragment>
                     }/>
@@ -68,11 +70,11 @@ class Sidebar extends React.Component {
                     }/>
                 </ListItem>
                 {
-                    this.props.ChannelStore.channels.map(item => {
+                    this.channelStore.channels.map(item => {
                         return (
                             <ListItem button dense onClick={()=>{history.push('/@'+item.username)}}>
                                 <ListItemText primary={
-                                    <Typography variant="body2" className={classes.greyText}>
+                                    <Typography variant="body2" className={window.location.href.includes('/@'+item.username) ? classes.whiteText :classes.greyText}>
                                         # {item.nickname}
                                     </Typography>
                                 }/>
@@ -81,6 +83,7 @@ class Sidebar extends React.Component {
                     })
                 }
             </List>
+            </Grid>
         )
     }
 }
