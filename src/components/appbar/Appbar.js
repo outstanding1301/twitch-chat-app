@@ -31,7 +31,7 @@ const useStyles = { //6100c7
 class Appbar extends React.Component {
     render() {
         const {history, classes, authStore, channelStore} = this.props;
-        const chatRoom = channelStore.channels.filter(c => window.location.href.includes('/@'+c.username));
+        const chatRoom = channelStore.channels.filter(c => window.location.href.includes('/@'+c.username))[0];
         
         return (
             <AppBar position="static" className={classes.appBar}>
@@ -40,7 +40,7 @@ class Appbar extends React.Component {
                 <MenuIcon />
               </IconButton>
               <Typography variant="h6" className={classes.title} onClick={()=>{history.push('/')}}>
-                {chatRoom ? '🚀 '+chatRoom[0].nickname : '🚀 Twitch Chat App'}
+                {chatRoom ? '🚀 '+chatRoom.nickname : '🚀 Twitch Chat App'}
               </Typography>
               {
               authStore.user ?
