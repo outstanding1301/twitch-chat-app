@@ -2,7 +2,7 @@ import React from 'react';
 import ChatSocket from 'twitch/chatSocket';
 import Chat from 'components/Chat';
 import { inject, observer } from 'mobx-react';
-import Colors from 'components/util/Colors';
+import Colors from 'util/Colors';
 
 @inject("authStore")
 @observer
