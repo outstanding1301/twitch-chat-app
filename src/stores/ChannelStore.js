@@ -3,6 +3,17 @@ import { autorun, makeAutoObservable } from 'mobx'
 class ChannelStore {
     channels = [
     ];
+
+    /*
+broadcaster_type: (...)
+created_at: (...)
+description: (...)
+followed_at: (...)
+id: (...)
+nickname: (...)
+profile_image_url: (...)
+username: (...)
+    */
     
     constructor() {
         makeAutoObservable(this);
