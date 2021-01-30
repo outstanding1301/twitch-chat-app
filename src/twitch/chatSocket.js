@@ -3,8 +3,10 @@ export default class ChatSocket {
     oauth;
     room;
     onChat;
-    constructor(oauth) {
+    globalState = '';
+    constructor(oauth, user) {
         this.oauth = 'oauth:'+oauth;
+        this.user = user;
     }
 
     connect = (room) => {
@@ -22,7 +24,7 @@ export default class ChatSocket {
 
     join = (room) => {
         this.ws.send('PASS '+this.oauth);
-        this.ws.send('NICK '+room);
+        this.ws.send('NICK '+this.user.login);
         this.ws.send('JOIN #'+room);
         this.ws.send('USER #'+room);
     }
@@ -40,6 +42,12 @@ export default class ChatSocket {
     }
 
     onMessage = (e) => {
+        // console.log(e.data);
+        if (e.data.includes("GLOBALUSERSTATE")) {
+            this.globalState = e.data.replace("GLOBALUSERSTATE", "");
+            this.globalState = this.globalState.substring(this.globalState.indexOf("@badge-info"));
+            console.log(this.globalState);
+        }
         if (e.data.includes("PRIVMSG #"+this.room)) {
             const chat  = chatParser(e.data, this.room);
             if (this.onChat) {
@@ -55,6 +63,16 @@ export default class ChatSocket {
 
     send = (message) => {
         this.ws.send(message);
+    }
+    chat = (message) => {
+        this.send('PRIVMSG #'+this.room+' :'+message);
+        const chatmsg = this.globalState+'PRIVMSG #'+this.room+' :'+message;
+        console.log(chatmsg);
+        const chat = chatParser(chatmsg, this.room);
+        chat['username'] = this.user.login;
+        if (this.onChat) {
+            this.onChat(chat);
+        }
     }
 }
 
@@ -79,25 +97,25 @@ user-type= :ra_lo!ra_lo@ra_lo.tmi.twitch.tv PRIVMSG #looksam :looksamPotter look
 
 function chatParser(msg, room) {
     const data = {};
-    console.log(msg);
+    // console.log(msg);
     if (msg.startsWith('@')) {
         msg = msg.substring(1);
     }
-    data["badge-info"] = msg.split("badge-info=")[1].split(";")[0];
-    data["badges"] = msg.split("badges=")[1].split(";")[0];
-    data["color"] = msg.split("color=")[1].split(";")[0];
-    data["display-name"] = msg.split("display-name=")[1].split(";")[0];
-    data["emotes"] = msg.split("emotes=")[1].split(";")[0];
-    data["flags"] = msg.split("flags=")[1].split(";")[0];
-    data["id"] = msg.split("id=")[1].split(";")[0];
-    data["room-id"] = msg.split("room-id=")[1].split(";")[0];
-    data["subscriber"] = msg.split("subscriber=")[1].split(";")[0];
-    data["tmi-sent-ts"] = msg.split("tmi-sent-ts=")[1].split(";")[0];
-    data["turbo"] = msg.split("turbo=")[1].split(";")[0];
-    data["user-id"] = msg.split("user-id=")[1].split(";")[0];
-    data["user-type"] = msg.split("user-type=")[1].split(" ")[1];
-    data["username"] = data["user-type"].split("@")[1].split(".")[0];
-    data["message"] = msg.split("user-type=")[1].split("#")[1].replace(room+" :", "").split("\r\n")[0];
+    try { data["badge-info"] = msg.split("badge-info=")[1].split(";")[0]; } catch(err) {}
+    try { data["badges"] = msg.split("badges=")[1].split(";")[0]; } catch(err) {}
+    try { data["color"] = msg.split("color=")[1].split(";")[0]; } catch(err) {}
+    try { data["display-name"] = msg.split("display-name=")[1].split(";")[0]; } catch(err) {}
+    try { data["emotes"] = msg.split("emotes=")[1].split(";")[0]; } catch(err) {}
+    try { data["flags"] = msg.split("flags=")[1].split(";")[0]; } catch(err) {}
+    try { data["id"] = msg.split("id=")[1].split(";")[0]; } catch(err) {}
+    try { data["room-id"] = msg.split("room-id=")[1].split(";")[0]; } catch(err) {}
+    try { data["subscriber"] = msg.split("subscriber=")[1].split(";")[0]; } catch(err) {}
+    try { data["tmi-sent-ts"] = msg.split("tmi-sent-ts=")[1].split(";")[0]; } catch(err) {}
+    try { data["turbo"] = msg.split("turbo=")[1].split(";")[0]; } catch(err) {}
+    try { data["user-id"] = msg.split("user-id=")[1].split(";")[0]; } catch(err) {}
+    try { data["user-type"] = msg.split("user-type=")[1].split(" ")[1]; } catch(err) {}
+    try { data["username"] = data["user-type"].split("@")[1].split(".")[0]; } catch(err) {}
+    try { data["message"] = msg.split("user-type=")[1].split("#")[1].replace(room+" :", "").split("\r\n")[0]; } catch(err) {}
 
     return data;
 }
