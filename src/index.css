@@ -13,10 +13,10 @@ code {
 }
 
 *::-webkit-scrollbar {
-  width: 5px;
-  background-color: rgba(151, 151, 151, 0.274);
+  width: 7px;
+  background-color: rgba(129, 129, 129, 0.685);
 }
 *::-webkit-scrollbar-thumb {
-  width: 5px;
-  background-color: rgba(187, 187, 187, 0.685);
+  width: 7px;
+  background-color: rgba(255, 255, 255, 0.795);
 }
